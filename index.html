@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>CryptPad</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+     ║  PAGE 1 — HOME SCREEN (full page, no toolbar, no sidebar)       ║
+     ╚══════════════════════════════════════════════════════════════════╝ -->
+<div id="home-screen">
+
+  <!-- Floating background shapes -->
+  <div id="bg-shapes" aria-hidden="true">
+    <div class="s circle  p1"></div>
+    <div class="s square  p2"></div>
+    <div class="s circle  p3"></div>
+    <div class="s diamond p4"></div>
+    <div class="s circle  p5"></div>
+    <div class="s square  p6"></div>
+    <div class="s diamond p7"></div>
+    <div class="s circle  p8"></div>
+    <div class="s square  p9"></div>
+    <div class="s circle  p10"></div>
+    <div class="s diamond p11"></div>
+    <div class="s square  p12"></div>
+  </div>
+
+  <!-- Home content -->
+  <div id="home-wrap">
+
+    <!-- Brand -->
+    <div id="home-brand">
+      <div id="home-logo">CryptPad</div>
+      <div id="home-sub">Symbolic encryption text editor</div>
+    </div>
+
+    <!-- Recent files -->
+    <div id="home-recent">
+      <div id="recent-bar">
+        <span id="recent-label">Recent Files</span>
+        <button id="btn-clear-recent">Clear all</button>
+      </div>
+      <div id="recent-grid">
+        <div class="no-recent">No recent files yet</div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div id="home-actions">
+      <button class="hbtn" id="home-new">
+        <span class="hbtn-ico">+</span> New File
+      </button>
+      <button class="hbtn" id="home-encrypt">
+        <span class="hbtn-ico">&#8594;</span> Encrypt
+      </button>
+      <button class="hbtn" id="home-decrypt">
+        <span class="hbtn-ico">&#8592;</span> Decrypt
+      </button>
+    </div>
+
+  </div>
+</div><!-- /#home-screen -->
+
+
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+     ║  PAGE 2 — WORKSPACE (toolbar + sidebar + tabs + editor)         ║
+     ╚══════════════════════════════════════════════════════════════════╝ -->
+<div id="workspace" class="hidden">
+
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <button class="tbtn icon" id="tb-home"    title="Home">&#8962;</button>
+    <div class="tdiv"></div>
+    <button class="tbtn" id="tb-new"          title="New file  Ctrl+N">New</button>
+    <button class="tbtn" id="tb-encrypt"      title="Open .txt files  Ctrl+O">Encrypt</button>
+    <button class="tbtn" id="tb-decrypt"      title="Open .crypt files  Ctrl+D">Decrypt</button>
+    <div class="tdiv"></div>
+    <button class="tbtn inv" id="tb-save" title="Save  Ctrl+S">Save</button>
+    <div class="tdiv"></div>
+    <button class="tbtn" id="tb-zoom-in"      title="Zoom In  Ctrl+=">A+</button>
+    <button class="tbtn" id="tb-zoom-out"     title="Zoom Out  Ctrl+-">A&#8722;</button>
+    <div class="tdiv hide-sm"></div>
+    <button class="tbtn hide-sm" id="tb-key"  title="Cipher Key">Key</button>
+    <div class="tdiv hide-sm"></div>
+    <button class="tbtn hide-sm" id="tb-sidebar" title="Toggle Sidebar  Ctrl+B">&#9776;</button>
+    <div class="tfill"></div>
+    <span id="tb-name"></span>
+    <span id="tb-enc-badge" class="enc-badge hidden">ENC</span>
+  </div>
+
+  <!-- Body: sidebar + editor -->
+  <div id="body">
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div id="sb-head">
+        <span>EXPLORER</span>
+        <button id="sb-open" title="Open folder">+</button>
+      </div>
+      <div id="sb-path">No folder open</div>
+      <div id="file-tree"></div>
+    </div>
+    <div id="resizer"></div>
+
+    <!-- Right: tabs + editor -->
+    <div id="right">
+      <div id="tab-bar"></div>
+      <div id="editor-wrap">
+        <div id="line-nums" aria-hidden="true">1</div>
+        <div id="gutter"></div>
+        <textarea id="editor"
+          spellcheck="false" autocorrect="off" autocapitalize="off"
+          wrap="off" placeholder="Start typing&#8230;"></textarea>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Status bar -->
+  <div id="statusbar">
+    <span id="st-msg">Ready</span>
+    <div id="st-right">
+      <span id="st-tabs"></span>
+      <span class="stv"></span>
+      <span id="st-mode">Plain Text</span>
+      <span class="stv"></span>
+      <span id="st-pos">Ln 1, Col 1</span>
+    </div>
+  </div>
+
+</div><!-- /#workspace -->
+
+
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+     ║  CIPHER KEY MODAL (always in DOM)                               ║
+     ╚══════════════════════════════════════════════════════════════════╝ -->
+<div id="modal-bg" class="hidden" role="dialog" aria-modal="true">
+  <div id="modal">
+    <div id="modal-head">
+      <span>CIPHER KEY REFERENCE</span>
+      <button id="modal-x">&#x2715;</button>
+    </div>
+    <p id="modal-note">Letters map to unique Unicode symbols. Numbers &amp; punctuation are unchanged.</p>
+    <div id="modal-body">
+      <div id="col-lower" class="cipher-col"></div>
+      <div id="col-upper" class="cipher-col"></div>
+    </div>
+    <div id="modal-foot">
+      <button id="modal-ok">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="dist/renderer.js"></script>
+</body>
+</html>
